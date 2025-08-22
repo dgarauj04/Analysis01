@@ -1,0 +1,54 @@
+openapi: 3.0.0
+info:
+  title: ENEM Analyzer API
+  version: "0.1"
+paths:
+  /api/upload:
+    post:
+      summary: Upload a PDF prova (opcional gabarito_file)
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                gabarito_file:
+                  type: string
+                  format: binary
+                prova:
+                  type: string
+                ano:
+                  type: integer
+                dia:
+                  type: integer
+                materia:
+                  type: string
+      responses:
+        "201":
+          description: Uploaded
+  /api/provas:
+    get:
+      summary: List provas (filtros: ano,nome,pagination)
+      responses:
+        "200": { description: OK }
+  /api/provas/{prova_id}/questoes:
+    get:
+      summary: Questões de uma prova
+      parameters:
+      - name: prova_id
+        in: path
+        required: true
+        schema:
+          type: integer
+  /api/provas/{prova_id}/assuntos:
+    get:
+      summary: Sugestões de assuntos por materia
+      parameters:
+      - name: prova_id
+        in: path
+        required: true
+        schema:
+          type: integer

@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+venv/
+.venv/
+# Data and models
+data/
+models/
+logs/
+# OS
+.DS_Store
+Thumbs.db
+# PyTest cache
+.pytest_cache/
