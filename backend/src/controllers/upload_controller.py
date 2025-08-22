@@ -70,10 +70,10 @@ def upload_file():
                 else:
                         return jsonify({"error": "Gabarito não encontrado no arquivo de questões. Envie 'gabarito_file' (PDF de gabarito)."}), 400
             # apply detected gabarito
-            if detected_gabarito:
-                for q in questions:
-                    if not q.get("gabarito") and q.get("numero") in detected_gabarito:
-                        q["gabarito"] = detected_gabarito[q["numero"]]
+        if detected_gabarito:
+            for q in questions:
+                if not q.get("gabarito") and q.get("numero") in detected_gabarito:
+                    q["gabarito"] = detected_gabarito[q["numero"]]
         # Save raw JSON
         raw_out_dir = os.path.join(current_app.config['RAW_OUTPUT'], prova)
         os.makedirs(raw_out_dir, exist_ok=True)
