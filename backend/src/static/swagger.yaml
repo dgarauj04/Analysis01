@@ -1,54 +1,156 @@
-openapi: 3.0.0
-info:
-  title: ENEM Analyzer API
-  version: "0.1"
-paths:
-  /api/upload:
-    post:
-      summary: Upload a PDF prova (opcional gabarito_file)
-      requestBody:
-        content:
-          multipart/form-data:
+  openapi: 3.0.0
+  info:
+    title: ENEM Analyzer API
+    description: >
+      API para análise de provas do ENEM. Permite upload de provas em PDF,
+      listagem de provas disponíveis, visualização de questões e sugestões de assuntos.
+    version: "0.1"
+
+  servers:
+    - url: http://localhost:5000
+      description: Servidor local de desenvolvimento
+
+  components:
+    schemas:
+      Prova:
+        type: object
+        properties:
+          id:
+            type: integer
+          nome:
+            type: string
+          ano:
+            type: integer
+          materia:
+            type: string
+          dia:
+            type: integer
+          origem:
+            type: string
+
+  tags:
+    - name: Upload
+      description: Envio de arquivos de prova
+    - name: Provas
+      description: Consulta e listagem de provas
+    - name: Questões
+      description: Visualização de questões por prova
+    - name: Assuntos
+      description: Sugestões de assuntos por prova
+
+  paths:
+    /api/upload:
+      post:
+        tags: [Upload]
+        summary: Upload de uma prova em PDF (opcional:gabarito_file)
+        requestBody:
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                required: [file, prova, ano, dia, materia]
+                properties:
+                  file:
+                    type: string
+                    format: binary
+                  gabarito_file:
+                    type: string
+                    format: binary
+                  prova:
+                    type: string
+                  ano:
+                    type: integer
+                  dia:
+                    type: integer
+                  materia:
+                    type: string
+        responses:
+          "201":
+            description: Arquivo enviado com sucesso
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    mensagem:
+                      type: string
+    /api/provas:
+      get:
+        tags: [Provas]
+        summary: Lista de provas disponíveis
+        parameters:
+          - name: ano
+            in: query
             schema:
-              type: object
-              properties:
-                file:
-                  type: string
-                  format: binary
-                gabarito_file:
-                  type: string
-                  format: binary
-                prova:
-                  type: string
-                ano:
-                  type: integer
-                dia:
-                  type: integer
-                materia:
-                  type: string
-      responses:
-        "201":
-          description: Uploaded
-  /api/provas:
-    get:
-      summary: List provas (filtros: ano,nome,pagination)
-      responses:
-        "200": { description: OK }
-  /api/provas/{prova_id}/questoes:
-    get:
-      summary: Questões de uma prova
-      parameters:
-      - name: prova_id
-        in: path
-        required: true
-        schema:
-          type: integer
-  /api/provas/{prova_id}/assuntos:
-    get:
-      summary: Sugestões de assuntos por materia
-      parameters:
-      - name: prova_id
-        in: path
-        required: true
-        schema:
-          type: integer
+              type: integer
+          - name: nome
+            in: query
+            schema:
+              type: string
+          - name: materia
+            in: query
+            schema:
+              type: string
+          - name: page
+            in: query
+            schema:
+              type: integer
+        responses:
+          "200":
+            description: Lista de provas
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Prova'
+
+    /api/provas/{prova_id}/questoes:
+      get:
+        tags: [Questões]
+        summary: Questões de uma prova específica
+        parameters:
+          - name: prova_id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          "200":
+            description: Lista de questões
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      numero:
+                        type: integer
+                      enunciado:
+                        type: string
+                      alternativas:
+                        type: array
+                        items:
+                          type: string
+
+    /api/provas/{prova_id}/assuntos:
+      get:
+        tags: [Assuntos]
+        summary: Sugestões de assuntos por matéria
+        parameters:
+          - name: prova_id
+            in: path
+            required: true
+            schema:
+              type: integer
+        responses:
+          "200":
+            description: Lista de assuntos sugeridos
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    type: string

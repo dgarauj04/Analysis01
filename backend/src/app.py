@@ -2,16 +2,18 @@ from flask import Flask, jsonify
 import logging
 from logging.handlers import RotatingFileHandler
 from config import Config, BASE_DIR
-from flask_swagger_ui import get_swaggerui_blueprint
+from flask_swagger_ui import get_swaggerui_blueprint 
+from flask_cors import CORS
 from src.extensions import db  
 from src.model import models
 import os 
-
+  
 def create_app(config_object=Config):
     app = Flask(__name__, static_folder="static")
     app.config.from_object(config_object)
     
-    # Logging
+    CORS(app, resources={r"/*": {"origins": "*"}})
+
     log_dir = os.path.join(os.path.dirname(BASE_DIR), "logs")
     os.makedirs(log_dir, exist_ok=True)
     log_path = os.path.join(log_dir, "app.log")

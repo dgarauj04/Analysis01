@@ -1,0 +1,13 @@
+{
+  "pdf_files_processed": [
+    "/data/2023-GB-ENEM_AMARELO_DIA2.pdf",
+    "/data/2024_ENEM_AZUL_DIA1.pdf",
+    "/data/2023_ENEM_AMARELO_DIA2.pdf",
+    "/data/2024_ENEM_AMARELO_DIA2.pdf"
+  ],
+  "num_examples": 345,
+  "output_csv": "/data/data/labels/auto_training_dataset.csv",
+  "gitignore": "/data/.gitignore",
+  "pdf_lib_used": "pdfplumber",
+  "stemmer_available": true
+}
